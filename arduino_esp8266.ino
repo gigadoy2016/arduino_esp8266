@@ -42,18 +42,26 @@ void loop() {
    
    String json = "{\"sensor\":{\"id\":"+String(arudinoID)+",\"Hum\":"+String(h)+",\"temp\":"+String(t)+" }}"; 
           
-   Serial.println("---------------------------------------------------------------------------------------");
-   Serial.println(json);          
-   Serial.println("---------------------------------------------------------------------------------------");
+   //Serial.println("---------------------------------------------------------------------------------------");
+   //Serial.println(json);          
+   //Serial.println("---------------------------------------------------------------------------------------");
    delay(100);
    json = "{'sensor':{'id':1,'Hum':30,'temp':50}}";
-   sendData(address_esp8266, json);
+   //sendData(address_esp8266, json);
+   sendData2(10);
    digitalWrite(led, LOW);
    delay(5000);
 }
 void sendData(int address , String data) {
   Wire.beginTransmission( address );      //เริ่มสื่อสารที่ address นี้
   Wire.write("{'data':{'id':1}}");                       // ส่งข้อมูลให้ตัวรับ
+  Wire.endTransmission();                 // จบการสื่อสาร
+  Serial.println("Sent data completed!!");          
+}
+void sendData2(int address) {
+  Wire.beginTransmission( address );      //เริ่มสื่อสารที่ address นี้
+  Serial.println("Sent address "+String(address) + " 1"); 
+  Wire.write(1);                       // ส่งข้อมูลให้ตัวรับ
   Wire.endTransmission();                 // จบการสื่อสาร
   Serial.println("Sent data completed!!");          
 }
