@@ -32,6 +32,7 @@ void setup() {
   Firebase.begin(FIREBASE_HOST, FIREBASE_KEY);*/
 }
 void loop() {
+    /*--------------------------------------------------------------------------- Arduino 1*/
     Wire.beginTransmission(8); /* begin with device address 8 */
     Wire.endTransmission();    /* stop transmitting */
     Wire.requestFrom(8, 13); /* request & read data of size 13 from slave */
@@ -43,8 +44,9 @@ void loop() {
     }
     Serial.println("");
     splitData(DATA);
-    delay(5000);
+    delay(500);
 
+    /*--------------------------------------------------------------------------- Arduino Nano 1*/
     Wire.beginTransmission(9); /* begin with device address 8 */
     Wire.endTransmission();    /* stop transmitting */
     Wire.requestFrom(9, 13); /* request & read data of size 13 from slave */
@@ -56,19 +58,19 @@ void loop() {
     }
     Serial.println("");
     splitData(DATA2);
-    delay(5000);
+    delay(500);
 
+    /*--------------------------------------------------------------------------- Arduino Nano 2*/
+    Wire.beginTransmission(7); /* begin with device address 8 */
+    Wire.endTransmission();    /* stop transmitting */
+    Wire.requestFrom(7, 13); /* request & read data of size 13 from slave */
+    
     String DATA3 ="";
-    float h = dht.readHumidity();
-    float t = dht.readTemperature();
-    float f = dht.readTemperature(true);
-    if (isnan(h) || isnan(t) || isnan(f)) {
-      Serial.println("Failed to read from DHT sensor!");
-      return;
+    while(Wire.available()){
+       char c = Wire.read();
+       DATA3 += c;
     }
-    float hi  = dht.computeHeatIndex(f, h);
-    DATA3 = "3,"+String(h)+","+String(t);
-    Serial.println("");
+    Serial.println("address:7");
     splitData(DATA3);
     delay(5000);
 }
@@ -84,8 +86,8 @@ void splitData(String DATA){
   //Serial.print("    humi:"+humi);
   //Serial.println("    temp:"+temp);
 
-  Firebase.setString("now/node_1/humi/",humi);
-  Firebase.setString("now/node_1/temp/",temp);
+  //Firebase.setString("now/node_1/humi/",humi);
+  //Firebase.setString("now/node_1/temp/",temp);
   JSON = "{\"id\":"+ID+",\"Hum\":"+humi+",\"temp\":"+temp+" }"; 
   Serial.println(JSON);
 }
